@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#10162b">
+<title>Classroom Showdown — The Big Game</title>
+<style>
+:root{
+  --bg:#0b1020;--panel:#151e37;--panel2:#1c2948;--panel3:#243556;--line:rgba(218,230,255,.14);
+  --text:#f6f7ff;--muted:#aebbd5;--teal:#67e5ce;--blue:#88b7ff;--gold:#ffd36e;--red:#ff7185;
+  --shadow:0 18px 50px rgba(0,0,0,.28);--radius:20px;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(900px 540px at 10% -8%,#29365e 0%,transparent 62%),radial-gradient(760px 500px at 100% 0%,#16434d 0%,transparent 56%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #67e5ce88;outline-offset:2px}
+.shell{width:min(1240px,calc(100% - 32px));margin:0 auto;padding:22px 0 48px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:11px}.brand-mark{width:45px;height:45px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(140deg,var(--gold),#ff9e74);color:#271a16;font-size:24px;font-weight:1000;box-shadow:0 8px 24px #ffd36e22}
+.brand-title{font-size:14px;font-weight:1000;letter-spacing:.14em}.brand-sub{font-size:10px;color:var(--muted);margin-top:3px}.top-pill{border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted);font-size:10px;font-weight:800;background:#ffffff08}
+.hero{display:grid;grid-template-columns:1.25fr .75fr;gap:14px;margin-bottom:20px}.hero-main,.hero-side,.panel,.mode-card,.level-card,.stage,.side-card,.result-card{background:linear-gradient(145deg,rgba(25,37,67,.97),rgba(16,25,47,.98));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.hero-main{padding:29px;position:relative;overflow:hidden}.hero-main:after{content:"★";position:absolute;right:22px;bottom:-100px;font-size:280px;color:#ffd36e08;pointer-events:none}.eyebrow{font-size:10px;font-weight:950;letter-spacing:.22em;text-transform:uppercase;color:var(--teal)}
+h1{font-size:clamp(36px,5.3vw,62px);line-height:.98;letter-spacing:-.06em;margin:13px 0 13px;max-width:760px}h1 span{color:var(--gold)}.hero-copy{color:#c2cce0;line-height:1.65;font-size:14px;max-width:650px;margin:0}
+.hero-side{padding:24px;background:linear-gradient(145deg,#254b55,#1b2b48);display:flex;flex-direction:column;justify-content:center}.hero-side strong{font-size:39px;letter-spacing:-.06em;color:var(--gold)}.hero-side p{font-size:12px;line-height:1.6;color:#d4e0f2;margin:5px 0 0}.hero-side .mini-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}.mini-tag{font-size:9px;font-weight:900;padding:6px 9px;border-radius:30px;background:#ffffff12;border:1px solid #ffffff19;color:#e6efff}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:23px 0 11px}.section-head h2{font-size:17px;margin:0;letter-spacing:-.03em}.section-head p{font-size:11px;color:var(--muted);margin:4px 0 0}.step{color:var(--teal);font-size:10px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+.mode-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.mode-card{padding:15px;text-align:left;color:var(--text);box-shadow:none;min-height:145px;transition:.16s}.mode-card:hover{transform:translateY(-2px);border-color:#67e5ce77}.mode-card.selected{border:2px solid var(--gold);padding:14px;background:linear-gradient(145deg,#3a3540,#1d2c49);box-shadow:0 0 0 3px #ffd36e17}.mode-icon{font-size:27px;display:block;margin-bottom:9px}.mode-name{font-size:13px;font-weight:950;display:block}.mode-desc{font-size:10px;line-height:1.48;color:var(--muted);display:block;margin-top:6px}.mode-time{display:inline-block;margin-top:10px;font-size:9px;font-weight:900;color:var(--teal);letter-spacing:.06em;text-transform:uppercase}
+.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.panel{padding:19px;box-shadow:none}.panel h3{font-size:14px;margin:0 0 5px}.panel-intro{font-size:10px;color:var(--muted);line-height:1.5;margin:0 0 15px}.field{margin-bottom:13px}.field:last-child{margin-bottom:0}.field label{display:block;font-size:11px;font-weight:850;color:#e5ebfa;margin-bottom:6px}.field small{display:block;color:var(--muted);font-size:9px;line-height:1.45;margin-top:5px}
+input[type=text],input[type=number],textarea,select{width:100%;border:1px solid #b8c9eb36;border-radius:11px;background:#0c152a;color:var(--text);padding:10px 11px;font-size:12px}textarea{min-height:86px;resize:vertical;line-height:1.5}select{cursor:pointer}input:focus,textarea:focus,select:focus{border-color:var(--teal);outline:none;box-shadow:0 0 0 3px #67e5ce17}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:9px}.level-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.level-card{box-shadow:none;padding:13px;text-align:left;color:var(--text);cursor:pointer}.level-card.selected{border:2px solid var(--teal);padding:12px;background:#67e5ce12}.level-card strong{font-size:12px;display:block}.level-card span{font-size:9px;line-height:1.4;color:var(--muted);display:block;margin-top:4px}.checkline{display:flex;align-items:flex-start;gap:9px;color:#d9e3f5;font-size:10px;line-height:1.45;margin-top:9px}.checkline input{accent-color:var(--teal);margin-top:1px}.preview{margin-top:10px;padding:10px 12px;background:#ffffff08;border:1px solid var(--line);border-radius:11px;color:#c7d5ee;font-size:10px;line-height:1.5}
+details.custom{margin-top:13px;border:1px solid var(--line);border-radius:13px;background:#ffffff06;padding:12px 14px}details.custom summary{font-size:11px;font-weight:950;color:var(--gold);cursor:pointer}details.custom .custom-body{padding-top:13px}
+.launch{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin-top:15px;padding:17px 19px;border:1px solid #67e5ce44;border-radius:16px;background:linear-gradient(100deg,#67e5ce12,#88b7ff0c)}.launch strong{font-size:13px}.launch p{margin:4px 0 0;color:var(--muted);font-size:10px;line-height:1.5}.primary,.secondary,.ghost,.gold,.danger{border:0;border-radius:11px;padding:11px 15px;font-size:11px;font-weight:950;transition:.15s}.primary{background:var(--teal);color:#102338;box-shadow:0 7px 20px #67e5ce21}.primary:hover{filter:brightness(1.07);transform:translateY(-1px)}.secondary{background:#2a3a5c;border:1px solid var(--line);color:#f3f6ff}.ghost{background:transparent;border:1px solid var(--line);color:#dce6f8}.gold{background:var(--gold);color:#322512}.danger{background:#5c293a;color:#fff;border:1px solid #ff718544}.primary:disabled,.secondary:disabled,.ghost:disabled,.gold:disabled,.danger:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.hidden{display:none!important}
+/* Game screen */
+.game-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:3px 0 13px}.game-brand{display:flex;align-items:center;gap:10px}.game-brand .emoji{font-size:25px}.game-brand h2{font-size:19px;margin:0;letter-spacing:-.04em}.game-brand p{font-size:10px;color:var(--muted);margin:3px 0 0}.toolbar-actions{display:flex;gap:7px;flex-wrap:wrap}.toolbar-actions button{padding:9px 11px;font-size:10px}
+.scoreboard{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;margin-bottom:12px}.team-score{border:1px solid var(--line);background:linear-gradient(145deg,#192746,#111c35);border-radius:16px;padding:13px 16px;position:relative;overflow:hidden}.team-score.active{border:2px solid var(--gold);padding:12px 15px;box-shadow:0 0 0 3px #ffd36e14}.team-score .turn-label{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:1000;min-height:12px}.team-score .team-name{font-size:15px;font-weight:950;margin-top:4px;overflow-wrap:anywhere}.team-score .team-members{font-size:9px;color:var(--muted);margin-top:3px;line-height:1.4}.team-score .team-points{font-size:29px;color:var(--gold);font-weight:1000;letter-spacing:-.06em;margin-top:5px}.score-vs{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:1000;color:#91a1c1;letter-spacing:.12em}
+.progress{border:1px solid var(--line);background:#ffffff08;border-radius:12px;padding:10px 13px;margin-bottom:12px}.progress-top{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:9px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px}.progress-track{height:6px;background:#080f20;border-radius:20px;overflow:hidden}.progress-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));border-radius:20px;transition:width .25s}
+.game-layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:13px;align-items:start}.stage{padding:22px;min-height:420px;position:relative;overflow:hidden}.round-meta{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}.tag{font-size:8px;font-weight:950;text-transform:uppercase;letter-spacing:.12em;padding:6px 8px;border-radius:20px;border:1px solid var(--line);color:var(--muted);background:#ffffff08}.tag.hot{color:var(--gold);border-color:#ffd36e55;background:#ffd36e10}.tag.mode{color:var(--teal);border-color:#67e5ce44;background:#67e5ce0d}.stage h3{font-size:clamp(22px,3vw,31px);line-height:1.12;letter-spacing:-.045em;margin:0 0 10px}.prompt{font-size:15px;line-height:1.65;color:#f1f4ff;white-space:pre-line;margin:0}.host-tip{margin-top:14px;padding:11px 13px;border:1px solid #88b7ff40;border-left:3px solid var(--blue);border-radius:0 10px 10px 0;background:#88b7ff0b;color:#d8e6ff;font-size:10px;line-height:1.5}.host-tip b{color:var(--blue)}
+/* survey board */
+.bankbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:16px 0 11px;padding:11px 14px;border-radius:12px;background:linear-gradient(90deg,#3a3044,#253755);border:1px solid #ffd36e48}.bankbar span{font-size:9px;color:#e9d8b6;font-weight:950;letter-spacing:.13em;text-transform:uppercase}.bankbar strong{font-size:24px;color:var(--gold);letter-spacing:-.05em}.answer-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.answer-tile{border:1px solid #88b7ff45;background:linear-gradient(120deg,#23385f,#1b2949);color:#f3f7ff;border-radius:12px;padding:0;min-height:58px;display:flex;align-items:center;gap:10px;text-align:left;overflow:hidden;transition:.18s}.answer-tile:not(:disabled):hover{transform:translateY(-1px);border-color:var(--gold)}.answer-tile:disabled{cursor:default;opacity:1}.tile-num{width:37px;align-self:stretch;display:grid;place-items:center;background:#ffffff0c;color:var(--gold);font-size:15px;font-weight:1000;flex-shrink:0}.tile-copy{flex:1;padding:8px 0;font-size:12px;font-weight:850}.tile-points{font-size:13px;font-weight:1000;color:var(--teal);padding:0 12px}.answer-tile.revealed{border-color:#67e5ce66;background:linear-gradient(100deg,#1d504c,#1b3448);animation:pop .25s ease}.answer-tile.revealed .tile-num{background:#67e5ce1b;color:var(--teal)}.strike-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:15px}.strikes{display:flex;align-items:center;gap:7px}.strike-label{font-size:9px;font-weight:950;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-right:3px}.strike-dot{width:29px;height:29px;border-radius:9px;border:1px solid #ff71854d;background:#ff718511;display:grid;place-items:center;color:#ff7185;font-weight:1000;font-size:17px}.strike-dot.used{background:#ff7185;color:#29111a;box-shadow:0 5px 14px #ff718533}.host-controls{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.steal-box,.complete-box,.reveal-answer,.clue-box,.category-panel,.quiz-options{margin-top:14px;padding:14px;border-radius:13px;border:1px solid var(--line);background:#ffffff08}.steal-box{border-color:#ff71855a;background:#ff71850d}.steal-box strong,.complete-box strong{font-size:12px;display:block;margin-bottom:5px}.steal-box p,.complete-box p{font-size:10px;color:#d9e2f2;line-height:1.5;margin:0 0 10px}.complete-box{border-color:#67e5ce55;background:#67e5ce0d}.reveal-answer{border-color:#67e5ce55;background:#67e5ce0d;color:#e6fff6;font-size:11px;line-height:1.55}.reveal-answer b{color:var(--teal)}
+/* quiz */
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}.quiz-option{padding:11px 12px;border:1px solid var(--line);background:#ffffff08;border-radius:10px;font-size:12px;color:#e6edfc}.quiz-option strong{color:var(--gold);margin-right:7px}.quiz-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+/* mystery */
+.clue-box{display:grid;gap:8px}.clue{display:flex;align-items:flex-start;gap:10px;padding:10px 11px;border:1px solid var(--line);background:#ffffff07;border-radius:10px;font-size:11px;line-height:1.5;color:#e7eefc}.clue-num{flex-shrink:0;width:23px;height:23px;border-radius:7px;display:grid;place-items:center;background:#ffd36e1c;color:var(--gold);font-size:10px;font-weight:1000}.clue.hidden-clue{opacity:.36}.clue.hidden-clue .clue-text{filter:blur(4px);user-select:none}.mystery-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.points-preview{font-size:10px;color:var(--gold);font-weight:950;margin-top:9px}
+/* category */
+.category-panel{padding:15px}.category-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.category-turn{font-size:10px;color:var(--teal);font-weight:950;letter-spacing:.12em;text-transform:uppercase}.category-clock{font-size:30px;color:var(--gold);font-weight:1000;letter-spacing:-.06em;font-variant-numeric:tabular-nums}.category-counts{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}.count-card{padding:12px;border-radius:11px;background:#0d172d;border:1px solid var(--line)}.count-card.active-count{border-color:var(--gold)}.count-card span{font-size:9px;color:var(--muted);font-weight:850}.count-card strong{display:block;font-size:25px;color:var(--teal);margin-top:3px}.count-controls{display:flex;gap:6px;margin-top:8px}.count-controls button{flex:1;padding:8px;border-radius:8px;border:1px solid var(--line);background:#203251;color:#eaf0fc;font-size:11px;font-weight:950}.category-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.timer-track{height:7px;border-radius:20px;background:#0a1225;overflow:hidden;margin-top:10px}.timer-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));width:100%;transition:width .4s linear}
+/* side and footer */
+.side{display:grid;gap:12px}.side-card{padding:15px;box-shadow:none}.side-card h4{font-size:12px;margin:0 0 10px}.side-rules{font-size:10px;line-height:1.6;color:#c7d4ea}.side-rules strong{color:var(--gold)}.round-list{display:grid;gap:6px}.round-item{display:flex;justify-content:space-between;align-items:center;gap:8px;border-radius:8px;padding:8px 9px;background:#ffffff07;font-size:9px;color:var(--muted)}.round-item.current{border:1px solid #ffd36e55;color:#fff0ca;background:#ffd36e0e}.round-item.done{color:var(--teal)}.round-item span:last-child{font-weight:950}.footer-actions{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-top:13px}.footer-actions .left,.footer-actions .right{display:flex;gap:7px;flex-wrap:wrap}.footer-note{text-align:center;color:#8796b3;font-size:9px;line-height:1.5;margin-top:19px}
+/* results and small animations */
+.results{max-width:820px;margin:26px auto}.result-card{padding:30px;text-align:center}.trophy{font-size:54px}.result-card h2{font-size:clamp(30px,5vw,43px);letter-spacing:-.06em;margin:10px 0}.result-card p{font-size:12px;line-height:1.6;color:var(--muted)}.winner-banner{margin:18px auto;padding:14px 18px;max-width:570px;border:1px solid #ffd36e55;border-radius:14px;background:#ffd36e0d;color:var(--gold);font-size:16px;font-weight:1000}.final-scores{max-width:560px;margin:18px auto;display:grid;gap:8px;text-align:left}.final-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;background:#ffffff08;border:1px solid var(--line);border-radius:11px}.final-row strong{font-size:12px}.final-row span{color:var(--gold);font-size:14px;font-weight:1000}.result-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:20px}.toast{position:fixed;bottom:18px;left:50%;transform:translate(-50%,18px);opacity:0;pointer-events:none;background:#f6f8ff;color:#15213a;padding:10px 14px;border-radius:10px;font-size:11px;font-weight:900;box-shadow:var(--shadow);transition:.2s;z-index:50}.toast.show{opacity:1;transform:translate(-50%,0)}
+@keyframes pop{0%{transform:scale(.97);opacity:.5}100%{transform:scale(1);opacity:1}}
+@media(max-width:940px){.game-layout{grid-template-columns:minmax(0,1fr) 255px}.mode-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:720px){.shell{width:calc(100% - 22px);padding-top:13px}.hero{grid-template-columns:1fr}.hero-side{padding:17px}.hero-side strong{font-size:31px}.setup-grid{grid-template-columns:1fr}.game-layout{grid-template-columns:1fr}.scoreboard{gap:6px}.team-score{padding:10px}.team-score.active{padding:9px}.team-score .team-name{font-size:12px}.team-score .team-points{font-size:24px}.score-vs{font-size:9px}.side{grid-template-columns:1fr 1fr}.stage{padding:17px}.top-pill{display:none}}
+@media(max-width:480px){.level-grid{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}.answer-grid,.quiz-options,.category-counts{grid-template-columns:1fr}.side{grid-template-columns:1fr}.mode-card{min-height:132px}.hero-main{padding:21px}.panel{padding:15px}.scoreboard{grid-template-columns:1fr auto 1fr}.team-score .team-members{display:none}.bankbar strong{font-size:21px}}
+@media print{body{background:#fff;color:#111}.topbar,.toolbar-actions,.footer-actions,.toast{display:none!important}.shell{width:100%;padding:0}.stage,.side-card,.team-score,.progress,.result-card{background:#fff!important;color:#111!important;box-shadow:none!important;border:1px solid #aaa!important}.prompt,.side-rules,.team-name,.team-members{color:#111!important}.game-layout{grid-template-columns:1fr 230px}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">★</div><div><div class="brand-title">CLASSROOM SHOWDOWN</div><div class="brand-sub">THE BIG CLASSROOM GAME</div></div></div>
+    <div class="top-pill">2–25 PLAYERS · ONE HOST · BIG ENERGY</div>
+  </header>
+
+  <main id="setupScreen">
+    <section class="hero">
+      <div class="hero-main"><div class="eyebrow">The classroom is your game show</div><h1>Think fast.<br><span>Play smart.</span><br>Win together.</h1><p class="hero-copy">A lively team game packed with popular-answer boards, quick questions, mystery clues and timed challenges. Pick a mode, split into two teams and let the showdown begin.</p></div>
+      <div class="hero-side"><strong>2 TEAMS.<br>1 WINNER.</strong><p>One host runs the screen. Everyone else plays together in the room. Easy rules, big reveals and plenty of chances for a comeback.</p><div class="mini-tags"><span class="mini-tag">SURVEY BOARDS</span><span class="mini-tag">STEAL CHANCES</span><span class="mini-tag">BONUS FINALE</span></div></div>
+    </section>
+
+    <div class="section-head"><div><h2>1. Choose your game mode</h2><p>Pick the style of challenge your class wants to play.</p></div><span class="step">STEP 1 OF 3</span></div>
+    <section class="mode-grid" id="modeChoices">
+      <button class="mode-card selected" data-mode="survey"><span class="mode-icon">📣</span><span class="mode-name">Survey Showdown</span><span class="mode-desc">Guess the most popular answers. Reveal the board, avoid three strikes and steal the points.</span><span class="mode-time">Best for big team energy</span></button>
+      <button class="mode-card" data-mode="quiz"><span class="mode-icon">⚡</span><span class="mode-name">Quiz Blitz</span><span class="mode-desc">Fast multiple-choice questions. Discuss, decide and earn points for correct answers.</span><span class="mode-time">Best for quick thinking</span></button>
+      <button class="mode-card" data-mode="mystery"><span class="mode-icon">🕵️</span><span class="mode-name">Mystery Reveal</span><span class="mode-desc">Uncover clues one at a time. Solve early to earn more points.</span><span class="mode-time">Best for deduction</span></button>
+      <button class="mode-card" data-mode="category"><span class="mode-icon">⏱️</span><span class="mode-name">Category Rush</span><span class="mode-desc">Take turns naming as many things as possible before the timer runs out.</span><span class="mode-time">Best for fast teamwork</span></button>
+    </section>
+
+    <div class="section-head"><div><h2>2. Set the challenge level</h2><p>Choose how tricky the questions should be.</p></div><span class="step">STEP 2 OF 3</span></div>
+    <section class="level-grid" id="levelChoices">
+      <button class="level-card" data-level="warm"><strong>🌱 Warm-Up</strong><span>Friendly questions to get everyone involved.</span></button>
+      <button class="level-card selected" data-level="main"><strong>🔥 Main Event</strong><span>A balanced challenge with a bit of thinking required.</span></button>
+      <button class="level-card" data-level="brain"><strong>🧠 Brain Buster</strong><span>Trickier questions for teams ready to think hard.</span></button>
+    </section>
+
+    <div class="section-head"><div><h2>3. Set up your teams</h2><p>Keep it simple: two teams, with players shared as evenly as possible.</p></div><span class="step">STEP 3 OF 3</span></div>
+    <section class="setup-grid">
+      <div class="panel">
+        <h3>Players and team names</h3><p class="panel-intro">Enter between 2 and 25 players. Names are optional — the game can make player labels for you.</p>
+        <div class="field"><label for="playerCount">How many players?</label><input id="playerCount" type="number" min="2" max="25" value="10"><small>Maximum 25 players. The teams will be balanced automatically.</small></div>
+        <div class="field"><label for="playerNames">Player names (one per line)</label><textarea id="playerNames" placeholder="Alex&#10;Jordan&#10;Sam&#10;Taylor&#10;... "></textarea></div>
+        <div class="two-col">
+          <div class="field"><label for="teamAName">Team 1 name</label><input id="teamAName" type="text" maxlength="22" value="The Brainy Bunch"></div>
+          <div class="field"><label for="teamBName">Team 2 name</label><input id="teamBName" type="text" maxlength="22" value="The Quick Thinkers"></div>
+        </div>
+        <label class="checkline"><input id="shufflePlayers" type="checkbox" checked><span>Shuffle the player list before splitting the teams.</span></label>
+        <div class="preview" id="teamPreview">10 players · 5 per team. Ready to play!</div>
+      </div>
+      <div class="panel">
+        <h3>Game settings</h3><p class="panel-intro">A few quick choices. The standard settings are ready to use.</p>
+        <div class="two-col">
+          <div class="field"><label for="roundCount">Number of rounds</label><select id="roundCount"><option value="4">4 rounds · Quick game</option><option value="6" selected>6 rounds · Full game</option><option value="8">8 rounds · Long game</option></select></div>
+          <div class="field"><label for="turnTime">Category Rush timer</label><select id="turnTime"><option value="20">20 seconds</option><option value="30" selected>30 seconds</option><option value="45">45 seconds</option></select></div>
+        </div>
+        <label class="checkline"><input id="doubleFinal" type="checkbox" checked><span><b>Double-points finale:</b> the final round is worth twice as much.</span></label>
+        <label class="checkline"><input id="soundOn" type="checkbox" checked><span>Enable simple game-show sound effects.</span></label>
+        <div class="preview"><b>How scoring works:</b> Survey rounds use the points shown on the answer board. Other modes show the points available before you award them. The host decides whether an answer counts.</div>
+      </div>
+    </section>
+
+    <details class="custom" id="customDetails">
+      <summary>✏️ Optional: add one custom round</summary>
+      <div class="custom-body">
+        <div class="field"><label for="customPrompt">Your custom question or category</label><textarea id="customPrompt" placeholder="Example: Name something that makes a great classmate..."></textarea><small>This is added as the final round. Leave it blank to use only the built-in questions.</small></div>
+        <div class="field"><label for="customNotes">Host answer notes / accepted examples</label><textarea id="customNotes" placeholder="Write the answer guide or examples here."></textarea><small>For Survey Showdown, use one answer per line like <b>Books: 30</b> (at least 3). For Mystery Reveal, enter <b>Answer: [answer]</b> on line 1, then 3 clue lines. For Quiz Blitz, enter the correct answer. For Category Rush, add example answers.</small></div>
+      </div>
+    </details>
+
+    <div class="launch"><div><strong id="launchSummary">Survey Showdown · Main Event · 10 players · 6 rounds</strong><p>One person hosts the screen. Teams answer out loud and work together.</p></div><button class="primary" id="startGame">START THE SHOWDOWN →</button></div>
+    <p class="footer-note">Survey Showdown boards use fictional game points created for this game, not results from a real-world survey.</p>
+  </main>
+
+  <main id="gameScreen" class="hidden"><div id="gameRoot"></div></main>
+  <main id="resultsScreen" class="hidden"></main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const MODE={
+ survey:{name:'Survey Showdown',icon:'📣',rule:'The active team calls out answers. The host reveals a matching tile. A wrong answer earns a strike. Three strikes give the other team one chance to steal the points.'},
+ quiz:{name:'Quiz Blitz',icon:'⚡',rule:'Read the question and choices. Teams discuss and choose an answer. Reveal the correct answer, then award the points to the team that got it right.'},
+ mystery:{name:'Mystery Reveal',icon:'🕵️',rule:'Reveal one clue at a time. A team can solve after any clue. Solving with fewer clues earns more points.'},
+ category:{name:'Category Rush',icon:'⏱️',rule:'Each team gets the same amount of time. Count one point on the tally for every new, valid answer. The team with more answers wins the round.'}
+};
+const LEVEL={
+ warm:{name:'Warm-Up',points:5,desc:'Friendly questions to get everyone involved.'},
+ main:{name:'Main Event',points:10,desc:'A balanced challenge with a bit of thinking required.'},
+ brain:{name:'Brain Buster',points:15,desc:'Trickier questions for teams ready to think hard.'}
+};
+const surveys={
+ warm:[
+  {title:'After-School Habits',prompt:'Name something people often do as soon as they get home.',answers:[['Eat a snack',25],['Change clothes',22],['Relax',18],['Do homework',15],['Watch a show',12],['Play games',8]]},
+  {title:'Movie Snacks',prompt:'Name a snack people often eat at the movies.',answers:[['Popcorn',32],['Chocolate',21],['Lollies / candy',18],['Chips',12],['Nachos',10],['Ice cream',7]]},
+  {title:'Beach Day',prompt:'Name something you might see at a beach.',answers:[['Sand',28],['Waves / water',24],['Umbrellas',16],['Surfboards',13],['Shells',11],['Lifeguards',8]]},
+  {title:'Running Late',prompt:'Name a reason someone might be late.',answers:[['Traffic',27],['Overslept',23],['Missed the bus',18],['Could not find something',13],['Bad weather',11],['Forgot the time',8]]},
+  {title:'Weekend Plans',prompt:'Name something people like to do on a weekend.',answers:[['Sleep in',25],['See friends',22],['Play sport',17],['Go shopping',14],['Relax',13],['Do hobbies',9]]},
+  {title:'Classroom Objects',prompt:'Name something you would expect to find in a classroom.',answers:[['Desk',25],['Chair',22],['Whiteboard',18],['Books',14],['Computer',12],['Clock',9]]},
+  {title:'Packing for a Sleepover',prompt:'Name something you might pack for a sleepover.',answers:[['Pyjamas',25],['Toothbrush',22],['Pillow',17],['Change of clothes',15],['Phone charger',12],['Snacks',9]]},
+  {title:'A Great Birthday',prompt:'Name something that can make a birthday party fun.',answers:[['Cake',26],['Friends',22],['Games',18],['Music',13],['Decorations',12],['Presents',9]]}
+ ],
+ main:[
+  {title:'The Ideal Teammate',prompt:'Name a quality that makes someone a great teammate.',answers:[['Communicates well',25],['Reliable',22],['Good listener',18],['Supportive',15],['Fair',11],['Positive attitude',9]]},
+  {title:'Putting It Off',prompt:'Name a task people commonly put off until later.',answers:[['Homework / studying',26],['Cleaning',22],['Exercise',17],['Replying to messages',13],['Errands',12],['Organising',10]]},
+  {title:'Before a Trip',prompt:'Name something people check or prepare before going on a trip.',answers:[['Weather',23],['Tickets / bookings',22],['Accommodation',17],['Packing list',15],['Travel route',13],['Passport / ID',10]]},
+  {title:'Memorable Presentation',prompt:'Name something that can make a presentation memorable.',answers:[['Interesting visuals',24],['A good story',21],['Humour',17],['Confidence',15],['Audience involvement',13],['Strong opening',10]]},
+  {title:'Solving a Disagreement',prompt:'Name something people can do to solve a disagreement.',answers:[['Listen to each other',25],['Talk it through',22],['Compromise',18],['Apologise',14],['Explain their view',12],['Ask someone to help',9]]},
+  {title:'Bad Timing',prompt:'Name something that can run out at the worst possible time.',answers:[['Phone battery',27],['Time',22],['Money',16],['Petrol / fuel',13],['Printer ink',12],['Patience',10]]},
+  {title:'A Good School Event',prompt:'Name something that helps make a school event successful.',answers:[['Good planning',23],['People participating',21],['Clear instructions',18],['Music / entertainment',15],['Teamwork',13],['Good equipment',10]]},
+  {title:'Useful Skills',prompt:'Name a skill that is useful in almost any job.',answers:[['Communication',25],['Problem solving',22],['Teamwork',18],['Time management',14],['Adaptability',12],['Organisation',9]]}
+ ],
+ brain:[
+  {title:'Things You Can Measure',prompt:'Name something that can be measured but cannot be held in your hands.',answers:[['Time',25],['Temperature',20],['Distance',18],['Speed',15],['Sound',12],['Pressure',10]]},
+  {title:'Question-Asking Jobs',prompt:'Name a job where asking good questions is especially important.',answers:[['Journalist',23],['Scientist',22],['Detective',18],['Teacher',15],['Doctor',12],['Researcher',10]]},
+  {title:'Practice Makes Progress',prompt:'Name something that usually improves with practice.',answers:[['Playing an instrument',22],['Sport',21],['Public speaking',18],['Writing',15],['Memory',13],['Problem solving',11]]},
+  {title:'Changing the Plan',prompt:'Name a reason a group might need to change its original plan.',answers:[['New information',24],['Not enough time',21],['Missing resources',17],['Safety concern',15],['Unexpected event',13],['Feedback',10]]},
+  {title:'A Useful Symbol',prompt:'Name something that can be both a practical object and a symbol.',answers:[['Key',25],['Flag',20],['Ring',18],['Book',15],['Bridge',12],['Light',10]]},
+  {title:'Things That Loop',prompt:'Name something that has a beginning and an end but can be repeated in a loop.',answers:[['Song',24],['Video',20],['Game',18],['Story',15],['Cycle',13],['Routine',10]]},
+  {title:'Thinking Ahead',prompt:'Name something a good planner tries to predict before starting a project.',answers:[['Risks',23],['Time needed',21],['Costs',18],['Possible problems',15],['Resources',13],['People needed',10]]},
+  {title:'Unexpected Uses',prompt:'Name something ordinary that can be used in more than one clever way.',answers:[['Paper clip',22],['Rubber band',20],['Cardboard box',18],['String',15],['Jar',13],['Towel',12]]}
+ ]
+};
+const quizzes={
+ warm:[
+  {title:'Quick Maths',prompt:'What is 9 × 7?',options:['56','63','72','79'],answer:1,explain:'9 × 7 = 63.'},
+  {title:'Space Check',prompt:'Which planet is known as the Red Planet?',options:['Venus','Jupiter','Mars','Mercury'],answer:2,explain:'Mars looks reddish because of iron-rich dust on its surface.'},
+  {title:'Nature Know-How',prompt:'What do bees collect from flowers to help make honey?',options:['Nectar','Sand','Seeds','Dew'],answer:0,explain:'Bees collect nectar from flowers and turn it into honey.'},
+  {title:'Shape Smart',prompt:'How many sides does a hexagon have?',options:['Five','Six','Seven','Eight'],answer:1,explain:'A hexagon has six sides.'},
+  {title:'Time Challenge',prompt:'How many minutes are there in two hours?',options:['100','110','120','140'],answer:2,explain:'Two hours × 60 minutes = 120 minutes.'},
+  {title:'Frozen Facts',prompt:'What is the name for water in its solid state?',options:['Steam','Ice','Mist','Vapour'],answer:1,explain:'Water in its solid state is ice.'},
+  {title:'Music Room',prompt:'Which instrument usually has black and white keys?',options:['Violin','Trumpet','Piano','Drums'],answer:2,explain:'A piano uses black and white keys.'},
+  {title:'Animal Facts',prompt:'What is a baby frog called?',options:['Cub','Tadpole','Calf','Chick'],answer:1,explain:'A young frog develops from a tadpole.'}
+ ],
+ main:[
+  {title:'Ocean Facts',prompt:'Which is the largest ocean on Earth?',options:['Atlantic','Indian','Arctic','Pacific'],answer:3,explain:'The Pacific Ocean is the largest.'},
+  {title:'Percentage Power',prompt:'What is 15% of 200?',options:['20','25','30','35'],answer:2,explain:'10% is 20 and 5% is 10, so 15% is 30.'},
+  {title:'Elements',prompt:'Which metal is liquid at normal room temperature?',options:['Iron','Mercury','Copper','Aluminium'],answer:1,explain:'Mercury is a metal that is liquid at normal room temperature.'},
+  {title:'World Capitals',prompt:'What is the capital city of Japan?',options:['Seoul','Beijing','Tokyo','Kyoto'],answer:2,explain:'Tokyo is the capital of Japan.'},
+  {title:'Plant Power',prompt:'Which gas do plants absorb from the air during photosynthesis?',options:['Oxygen','Carbon dioxide','Nitrogen','Hydrogen'],answer:1,explain:'Plants use carbon dioxide, water and light in photosynthesis.'},
+  {title:'Geometry',prompt:'What is the square root of 144?',options:['10','11','12','14'],answer:2,explain:'12 × 12 = 144.'},
+  {title:'Human Body',prompt:'Which organ filters waste from the blood to make urine?',options:['Lungs','Kidneys','Stomach','Heart'],answer:1,explain:'The kidneys filter the blood and produce urine.'},
+  {title:'Word Smarts',prompt:'Which word means “able to change or adjust to new conditions”?',options:['Fragile','Adaptable','Invisible','Ancient'],answer:1,explain:'Adaptable means able to adjust to new conditions.'}
+ ],
+ brain:[
+  {title:'Prime Time',prompt:'What is the next prime number after 31?',options:['33','35','37','39'],answer:2,explain:'37 is prime; it can only be divided evenly by 1 and itself.'},
+  {title:'Planet Speed',prompt:'Which planet has the shortest day, rotating once in roughly 10 hours?',options:['Earth','Mars','Jupiter','Venus'],answer:2,explain:'Jupiter rotates very quickly, completing a rotation in about 10 hours.'},
+  {title:'Word of the Day',prompt:'What word describes animals that are most active at dawn and dusk?',options:['Nocturnal','Diurnal','Crepuscular','Aquatic'],answer:2,explain:'Crepuscular animals are most active around dawn and dusk.'},
+  {title:'Binary Basics',prompt:'What number is represented by the binary number 1010?',options:['8','9','10','12'],answer:2,explain:'Binary 1010 equals 8 + 2, which is 10.'},
+  {title:'Chemical Symbols',prompt:'What is the chemical symbol for potassium?',options:['P','Po','K','Pt'],answer:2,explain:'Potassium uses the chemical symbol K.'},
+  {title:'Triangle Thinking',prompt:'Which theorem connects the side lengths of a right-angled triangle?',options:['Newton’s law','Pythagorean theorem','Fibonacci rule','Euclid’s circle rule'],answer:1,explain:'The Pythagorean theorem says a² + b² = c² for a right-angled triangle.'},
+  {title:'Number Knowledge',prompt:'What is the smallest prime number?',options:['0','1','2','3'],answer:2,explain:'2 is the smallest prime number and the only even prime.'},
+  {title:'Language Logic',prompt:'What is a word or phrase that reads the same forwards and backwards called?',options:['A synonym','A palindrome','An acronym','An anagram'],answer:1,explain:'A palindrome reads the same forwards and backwards, such as “level”.'}
+ ]
+};
+const mysteries={
+ warm:[
+  {title:'What Am I?',answer:'A clock',clues:['You might find me on a wall or around someone’s wrist.','I have hands, but I cannot clap.','I help you know the time.']},
+  {title:'What Am I?',answer:'A book',clues:['I can take you to another world without moving.','I have a spine, but no bones.','I am filled with pages and words.']},
+  {title:'What Am I?',answer:'An umbrella',clues:['I am useful when the weather changes.','You open me above your head.','I help keep you dry in the rain.']},
+  {title:'What Am I?',answer:'A shadow',clues:['I follow you but never speak.','I change shape depending on the light.','You can see me on the ground on a sunny day.']},
+  {title:'What Am I?',answer:'A candle',clues:['I become smaller while doing my job.','I can make a room brighter without electricity.','I have a wick and a flame.']},
+  {title:'What Am I?',answer:'A toothbrush',clues:['I am used every day by many people.','I work best with a little paste.','I help keep your teeth clean.']},
+  {title:'What Am I?',answer:'A mirror',clues:['I show you something, but I do not take a photo.','I copy your movements instantly.','You can see your reflection in me.']},
+  {title:'What Am I?',answer:'A basketball',clues:['I am designed to bounce.','I am used in a team sport.','Players try to throw me through a hoop.']}
+ ],
+ main:[
+  {title:'What Am I?',answer:'A map',clues:['I can help you travel without moving myself.','I show places, but I am not the place.','I use symbols and lines to show locations and routes.']},
+  {title:'What Am I?',answer:'An echo',clues:['I repeat something, but I do not understand it.','You might hear me in a large empty space.','I am a sound that bounces back.']},
+  {title:'What Am I?',answer:'A towel',clues:['The more I do my job, the wetter I become.','I am often hanging near a sink or shower.','I help dry you after washing.']},
+  {title:'What Am I?',answer:'A keyboard',clues:['I have many keys, but I do not open doors.','I can help you make words, music or commands.','You use me with a computer or instrument.']},
+  {title:'What Am I?',answer:'A postage stamp',clues:['I can travel a long way while staying in one small place.','I am usually stuck onto something.','I help a letter get delivered.']},
+  {title:'What Am I?',answer:'A sponge',clues:['I am full of tiny holes.','I can hold liquid even though I have gaps.','I am often used for cleaning.']},
+  {title:'What Am I?',answer:'A river',clues:['I have a mouth but I cannot eat.','I move through landscapes and can reach the sea.','I am a natural flowing body of water.']},
+  {title:'What Am I?',answer:'A camera',clues:['I can capture a moment without keeping the object.','I use a lens to help me see.','I take photographs or record video.']}
+ ],
+ brain:[
+  {title:'What Am I?',answer:'A promise',clues:['I can be broken without being touched.','I can be made between two people.','I am a commitment to do something.']},
+  {title:'What Am I?',answer:'A secret',clues:['I become harder to keep when more people know me.','People may whisper when sharing me.','I am information meant to stay hidden.']},
+  {title:'What Am I?',answer:'A riverbed',clues:['I can be dry even when I have a name linked to water.','A river moves along me.','I am the ground a river flows through.']},
+  {title:'What Am I?',answer:'A footprint',clues:['I am evidence that something has been somewhere.','I can disappear with time or weather.','I am a mark left by a foot.']},
+  {title:'What Am I?',answer:'Silence',clues:['I can be awkward, peaceful or powerful.','A room can be full of me.','I am the absence of sound.']},
+  {title:'What Am I?',answer:'A mirror image',clues:['I look like something real but I am not the original.','Left and right can appear reversed.','I am what you see when you look into a mirror.']},
+  {title:'What Am I?',answer:'A question',clues:['I can open a conversation or challenge an idea.','I usually invite an answer.','I often end with a question mark.']},
+  {title:'What Am I?',answer:'A bridge',clues:['I connect things that would otherwise be apart.','I can be made of many materials.','People use me to cross a gap, road or river.']}
+ ]
+};
+const categories={
+ warm:[
+  {title:'Lunchbox List',prompt:'Name as many things as you can that might go in a lunchbox.',examples:'Sandwich, fruit, yoghurt, crackers, cheese, water, juice, vegetables, muesli bar.'},
+  {title:'Farmyard Frenzy',prompt:'Name as many animals commonly found on a farm as you can.',examples:'Cow, sheep, horse, chicken, duck, pig, goat, turkey, donkey.'},
+  {title:'Things with Wheels',prompt:'Name as many things with wheels as you can.',examples:'Bicycle, car, bus, scooter, skateboard, train, trolley, truck.'},
+  {title:'Sleepover Packing',prompt:'Name as many things as you might pack for a sleepover as you can.',examples:'Pyjamas, toothbrush, pillow, sleeping bag, change of clothes, charger, game.'},
+  {title:'Fruit Bowl',prompt:'Name as many different fruits as you can.',examples:'Apple, banana, orange, mango, pear, grapes, pineapple, kiwi, peach.'},
+  {title:'Classroom Objects',prompt:'Name as many objects you might find in a classroom as you can.',examples:'Desk, chair, board, marker, ruler, books, computer, clock, bins.'},
+  {title:'Sporting Gear',prompt:'Name as many pieces of equipment used in sport as you can.',examples:'Ball, bat, racket, helmet, net, boots, gloves, whistle, cones.'},
+  {title:'Rainy Day',prompt:'Name as many activities people can do indoors on a rainy day as you can.',examples:'Read, bake, draw, board games, puzzles, watch a film, craft, music.'}
+ ],
+ main:[
+  {title:'Teamwork Activities',prompt:'Name as many activities that work better when people cooperate as you can.',examples:'Relay race, group project, orchestra, team sport, building, debate, event planning.'},
+  {title:'Things in Pairs',prompt:'Name as many everyday things that usually come in pairs as you can.',examples:'Shoes, socks, gloves, earrings, chopsticks, matching bookends, a pair of binoculars.'},
+  {title:'Ball Sports',prompt:'Name as many sports that use a ball as you can.',examples:'Football, basketball, tennis, cricket, volleyball, golf, rugby, netball, baseball.'},
+  {title:'Places with Queues',prompt:'Name as many places where people might have to wait in a line as you can.',examples:'Supermarket, airport, canteen, theme park, bank, cinema, doctor, bus stop.'},
+  {title:'Things That Need Charging',prompt:'Name as many devices or objects that may need charging as you can.',examples:'Phone, tablet, laptop, smartwatch, headphones, camera, game controller.'},
+  {title:'Ways to Travel',prompt:'Name as many ways people can travel from one place to another as you can.',examples:'Walk, bike, car, bus, train, ferry, plane, scooter, tram.'},
+  {title:'Things Made of Glass',prompt:'Name as many everyday things that can be made of glass as you can.',examples:'Window, bottle, jar, drinking glass, mirror, vase, phone screen.'},
+  {title:'Jobs that Help People',prompt:'Name as many jobs where helping other people is an important part of the work as you can.',examples:'Teacher, nurse, doctor, firefighter, counsellor, paramedic, social worker.'}
+ ],
+ brain:[
+  {title:'Double Letters',prompt:'Name as many common English words containing a double letter as you can.',examples:'Book, coffee, letter, balloon, rabbit, address, summer, traffic, happy.'},
+  {title:'Five-Letter Countries',prompt:'Name as many countries with exactly five letters in their English name as you can.',examples:'Chile, Egypt, Ghana, India, Japan, Kenya, Libya, Nepal, Niger, Qatar, Sudan.'},
+  {title:'Noun and Verb',prompt:'Name as many words that can be used as both a noun and a verb as you can.',examples:'Paint, play, watch, answer, dance, call, book, walk, plan.'},
+  {title:'Things with Layers',prompt:'Name as many things that have layers as you can.',examples:'Onion, cake, clothing, soil, paint, a sandwich, atmosphere, rock formations.'},
+  {title:'Natural Patterns',prompt:'Name as many repeating patterns found in nature as you can.',examples:'Tree rings, waves, honeycomb, spiral shells, leaf veins, branching patterns in trees.'},
+  {title:'Things that Reflect',prompt:'Name as many surfaces or objects that can reflect light as you can.',examples:'Mirror, still water, glass, polished metal, shiny tiles, foil.'},
+  {title:'Things with a Scale',prompt:'Name as many things that have a scale, level or series of steps as you can.',examples:'Map, thermometer, music, ruler, earthquake scale, weighing scale, model.'},
+  {title:'Everyday Systems',prompt:'Name as many systems people use to organise everyday life as you can.',examples:'Calendar, timetable, traffic lights, filing system, public transport, recycling, school bell.'}
+ ]
+};
+
+let selectedMode='survey',selectedLevel='main',game=null,timerId=null,toastTimer=null,audioCtx=null;
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function clamp(n,min,max){return Math.max(min,Math.min(max,n));}
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function getNames(){const count=clamp(parseInt($('playerCount').value,10)||2,2,25);let raw=$('playerNames').value.split(/[\n,]+/).map(x=>x.trim()).filter(Boolean);const names=[];for(let i=0;i<count;i++)names.push(raw[i]||`Player ${i+1}`);return names;}
+function updateSetup(){
+ const n=clamp(parseInt($('playerCount').value,10)||2,2,25);$('playerCount').value=n;
+ const a=Math.ceil(n/2),b=Math.floor(n/2);
+ $('teamPreview').textContent=`${n} players · ${a} in Team 1 · ${b} in Team 2. ${$('shufflePlayers').checked?'Players will be shuffled.':'Players will be assigned in the order listed.'}`;
+ $('launchSummary').textContent=`${MODE[selectedMode].name} · ${LEVEL[selectedLevel].name} · ${n} players · ${$('roundCount').value} rounds`;
+}
+function selectMode(mode){selectedMode=mode;document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('selected',b.dataset.mode===mode));updateSetup();}
+function selectLevel(level){selectedLevel=level;document.querySelectorAll('[data-level]').forEach(b=>b.classList.toggle('selected',b.dataset.level===level));updateSetup();}
+function parseCustomSurvey(){
+ const lines=$('customNotes').value.split(/\n/).map(x=>x.trim()).filter(Boolean);const out=[];
+ lines.forEach((line,i)=>{const match=line.match(/^(.+?)(?:\s*[:|—-]\s*)(\d+)\s*$/);if(match)out.push([match[1].trim(),Math.max(1,parseInt(match[2],10))]);else if(line)out.push([line,Math.max(5,30-i*5)]);});
+ return out.slice(0,8);
+}
+function makeRounds(){
+ const count=parseInt($('roundCount').value,10)||6;let pool;
+ if(selectedMode==='survey')pool=surveys[selectedLevel].map(x=>({...x,kind:'survey'}));
+ if(selectedMode==='quiz')pool=quizzes[selectedLevel].map(x=>({...x,kind:'quiz'}));
+ if(selectedMode==='mystery')pool=mysteries[selectedLevel].map(x=>({...x,kind:'mystery'}));
+ if(selectedMode==='category')pool=categories[selectedLevel].map(x=>({...x,kind:'category'}));
+ let rounds=shuffle(pool).slice(0,count);
+ const customPrompt=$('customPrompt').value.trim(),customNotes=$('customNotes').value.trim();
+ if(customPrompt){
+   let custom={kind:selectedMode,title:'Your Custom Round',prompt:customPrompt,custom:true,hostNotes:customNotes};
+   if(selectedMode==='survey'){
+     custom.answers=parseCustomSurvey();
+     if(custom.answers.length<3)throw new Error('For a custom Survey Showdown round, add at least three answers in the host notes. Example: Books: 30');
+   }
+   if(selectedMode==='mystery'){
+     const lines=customNotes.split(/\n|\|/).map(x=>x.trim()).filter(Boolean);
+     if(lines.length<4)throw new Error('For a custom Mystery Reveal round, enter four lines in the host notes: Answer: your answer, then three clues.');
+     custom.answer=lines[0].replace(/^answer\s*:\s*/i,'')||'Your custom answer';
+     custom.clues=lines.slice(1,4);
+   }
+   if(selectedMode==='quiz'&&!customNotes)throw new Error('For a custom Quiz Blitz round, add the correct answer in the host notes.');
+   rounds[count-1]=custom;
+ }
+ return rounds;
+}
+function startGame(){
+ let rounds;try{rounds=makeRounds();}catch(e){alert(e.message);return;}
+ let names=getNames();if($('shufflePlayers').checked)names=shuffle(names);
+ const mid=Math.ceil(names.length/2);
+ const t1=names.slice(0,mid),t2=names.slice(mid);
+ game={mode:selectedMode,level:selectedLevel,rounds,index:0,teams:[
+   {name:$('teamAName').value.trim()||'Team 1',members:t1,score:0},
+   {name:$('teamBName').value.trim()||'Team 2',members:t2,score:0}
+ ],doubleFinal:$('doubleFinal').checked,timeLimit:parseInt($('turnTime').value,10)||30,sound:$('soundOn').checked,firstTeam:Math.random()<.5?0:1,round:null,activeTeam:0,strikes:0,bank:0,revealed:[],stealActive:false,originalTeam:0,roundDone:false,answerRevealed:false,clueIndex:0,categoryTurn:0,categoryStarted:false,categoryFinished:false,categoryTallies:[0,0],categoryCompleted:false,remaining:0,awarded:false};
+ $('setupScreen').classList.add('hidden');$('resultsScreen').classList.add('hidden');$('gameScreen').classList.remove('hidden');
+ initRound();renderGame();window.scrollTo({top:0,behavior:'smooth'});
+}
+function initRound(){
+ stopTimer();const r=game.rounds[game.index];game.round=r;game.activeTeam=game.firstTeam^(game.index%2);game.strikes=0;game.bank=0;game.revealed=[];game.stealActive=false;game.originalTeam=game.activeTeam;game.roundDone=false;game.answerRevealed=false;game.clueIndex=0;game.categoryTurn=game.activeTeam;game.categoryStarted=false;game.categoryFinished=false;game.categoryTallies=[0,0];game.categoryCompleted=false;game.remaining=game.timeLimit;game.awarded=false;
+}
+function currentMultiplier(){return game.doubleFinal&&game.index===game.rounds.length-1?2:1;}
+function roundPoints(){return LEVEL[game.level].points*currentMultiplier();}
+function playTone(kind='tap'){
+ if(!game||!game.sound)return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.connect(gain);gain.connect(audioCtx.destination);const now=audioCtx.currentTime;const f=kind==='win'?660:kind==='strike'?180:kind==='reveal'?520:340;osc.frequency.setValueAtTime(f,now);osc.type='sine';gain.gain.setValueAtTime(.055,now);gain.gain.exponentialRampToValueAtTime(.001,now+.16);osc.start(now);osc.stop(now+.17);}catch(e){}
+}
+function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),1900);}
+function stopTimer(){if(timerId){clearInterval(timerId);timerId=null;}}
+function award(team,points,message){
+ if(game.roundDone)return;game.teams[team].score+=points;game.roundDone=true;game.awarded=true;stopTimer();playTone('win');renderGame();if(message)showToast(message);
+}
+function awardSurvey(team){const total=game.bank*currentMultiplier();award(team,total,`${game.teams[team].name} wins ${total} points!`);}
+function revealSurvey(i){if(game.roundDone||game.stealActive||game.revealed.includes(i))return;game.revealed.push(i);game.bank+=game.round.answers[i][1];playTone('reveal');if(game.revealed.length===game.round.answers.length){awardSurvey(game.activeTeam);return;}renderGame();}
+function strike(){if(game.roundDone||game.stealActive)return;game.strikes++;playTone('strike');if(game.strikes>=3){game.originalTeam=game.activeTeam;game.activeTeam=1-game.activeTeam;game.stealActive=true;showToast(`${game.teams[game.activeTeam].name} gets one chance to steal!`);}else showToast('Strike! Try another answer.');renderGame();}
+function resolveSteal(success){if(!game.stealActive||game.roundDone)return;const winner=success?game.activeTeam:game.originalTeam;awardSurvey(winner);}
+function revealQuiz(){if(game.roundDone)return;game.answerRevealed=true;playTone('reveal');renderGame();}
+function awardQuiz(team){if(!game.answerRevealed||game.roundDone)return;const pts=roundPoints();award(team,pts,`${game.teams[team].name} earns ${pts} points!`);}
+function revealClue(){if(game.roundDone||game.clueIndex>=3)return;game.clueIndex++;playTone('reveal');renderGame();}
+function solveMystery(team){if(game.roundDone||game.clueIndex===0)return;const pts=[0,3,2,1][game.clueIndex]*LEVEL[game.level].points*currentMultiplier();award(team,pts,`${game.teams[team].name} solves it for ${pts} points!`);}
+function startCategoryTurn(){if(game.roundDone||game.categoryStarted||game.categoryFinished)return;game.categoryStarted=true;game.remaining=game.timeLimit;playTone();startClock();renderGame();}
+function startClock(){stopTimer();timerId=setInterval(()=>{if(!game||game.roundDone)return;game.remaining=Math.max(0,game.remaining-1);const display=$('categoryClock'),fill=$('timerFill');if(display)display.textContent=`0:${String(game.remaining).padStart(2,'0')}`;if(fill)fill.style.width=`${(game.remaining/game.timeLimit)*100}%`;if(game.remaining<=0){finishCategoryTurn();showToast('Time! That turn is over.');}},1000);}
+function finishCategoryTurn(){if(!game||game.roundDone)return;stopTimer();game.remaining=0;game.categoryFinished=true;game.categoryStarted=false;renderGame();}
+function startNextCategoryTurn(){if(game.categoryTurn===game.activeTeam&&game.categoryFinished&&!game.categoryCompleted){game.categoryTurn=1-game.activeTeam;game.categoryFinished=false;game.categoryStarted=false;game.remaining=game.timeLimit;startCategoryTurn();}}
+function changeTally(delta){if(game.roundDone||!game.categoryStarted||game.categoryFinished)return;const t=game.categoryTurn;game.categoryTallies[t]=Math.max(0,game.categoryTallies[t]+delta);renderGame();}
+function scoreCategory(){if(game.roundDone||!game.categoryFinished)return;const [a,b]=game.categoryTallies;const pts=roundPoints()*2;if(a>b)award(0,pts,`${game.teams[0].name} wins the category! +${pts}`);else if(b>a)award(1,pts,`${game.teams[1].name} wins the category! +${pts}`);else{game.teams[0].score+=roundPoints();game.teams[1].score+=roundPoints();game.roundDone=true;game.awarded=true;playTone('win');renderGame();showToast('It is a tie! Both teams earn points.');}}
+function nextRound(){if(!game.roundDone)return;if(game.index>=game.rounds.length-1){showResults();return;}game.index++;initRound();renderGame();window.scrollTo({top:0,behavior:'smooth'});}
+function endGame(){if(confirm('End the game and show the current scores?'))showResults();}
+function escapeAttr(v){return esc(v).replace(/`/g,'&#96;');}
+function renderScoreboard(){const categoryTarget=game.categoryFinished&&game.categoryTurn===game.activeTeam?1-game.activeTeam:game.categoryTurn;return `<div class="scoreboard">${game.teams.map((t,i)=>{const isSurvey=game.mode==='survey'&&i===game.activeTeam&&!game.roundDone;const isCategory=game.mode==='category'&&i===categoryTarget&&!game.roundDone&&!(game.categoryFinished&&game.categoryTurn!==game.activeTeam);const isActive=isSurvey||isCategory;const label=isSurvey?(game.stealActive?'STEAL CHANCE':'CURRENT TEAM'):isCategory?(game.categoryStarted?'ON THE CLOCK':game.categoryFinished?'UP NEXT':'UP FIRST'):'';return `<div class="team-score ${isActive?'active':''}"><div class="turn-label">${label}</div><div class="team-name">${esc(t.name)}</div><div class="team-members">${t.members.map(esc).join(' · ')}</div><div class="team-points">${t.score}<small style="font-size:10px;color:#aebbd5;letter-spacing:0"> pts</small></div></div>${i===0?'<div class="score-vs">VS</div>':''}`;}).join('')}</div>`;}
+function renderSurvey(){
+ const r=game.round;const revealed=game.revealed;
+ const tiles=r.answers.map((a,i)=>{const yes=revealed.includes(i);return `<button class="answer-tile ${yes?'revealed':''}" data-action="reveal-tile" data-index="${i}" ${yes||game.roundDone||game.stealActive?'disabled':''}><span class="tile-num">${yes?'✓':String(i+1).padStart(2,'0')}</span><span class="tile-copy">${yes?esc(a[0]):'???'}</span><span class="tile-points">${yes?a[1]+' pts':'—'}</span></button>`;}).join('');
+ return `<div class="bankbar"><span>Points in the round bank</span><strong>${game.bank*currentMultiplier()}${currentMultiplier()===2?' ×2':''}</strong></div><div class="answer-grid">${tiles}</div><div class="strike-row"><div class="strikes"><span class="strike-label">Strikes</span>${[0,1,2].map(i=>`<span class="strike-dot ${i<game.strikes?'used':''}">${i<game.strikes?'✕':i+1}</span>`).join('')}</div><span style="font-size:9px;color:var(--muted)">${revealed.length} of ${r.answers.length} answers revealed</span></div>
+ ${game.stealActive?`<div class="steal-box"><strong>🚨 STEAL CHANCE!</strong><p>${esc(game.teams[game.activeTeam].name)} gets one final guess. The host decides whether the answer matches an unrevealed answer on the board.</p><div class="host-controls"><button class="primary" data-action="steal-success">✓ Correct — steal the bank</button><button class="danger" data-action="steal-fail">✕ Wrong — other team keeps it</button></div></div>`:!game.roundDone?`<div class="host-controls"><button class="danger" data-action="strike">✕ Wrong answer / strike</button><button class="ghost" data-action="bank-now">Bank points for ${esc(game.teams[game.activeTeam].name)}</button></div>`:''}
+ ${game.roundDone?`<div class="complete-box"><strong>🏁 Round complete!</strong><p>The points have been added to the leaderboard. Get ready for the next question.</p></div>`:''}
+ <div class="host-tip"><b>Host tip:</b> Read the prompt. Teams call out answers. Click the matching hidden tile to reveal it. The answer board uses made-up game points for fun, not real survey statistics.</div>`;
+}
+function renderQuiz(){const r=game.round;const optionHtml=(r.options||[]).map((o,i)=>`<div class="quiz-option"><strong>${String.fromCharCode(65+i)}.</strong>${esc(o)}</div>`).join('');return `<div class="quiz-options">${optionHtml||'<div class="quiz-option">Custom question — listen to both teams’ answers.</div>'}</div>${game.answerRevealed?`<div class="reveal-answer"><b>Correct answer:</b> ${r.options&&r.options.length?`${String.fromCharCode(65+r.answer)}. ${esc(r.options[r.answer])}`:esc(r.hostNotes||'Host: use your custom answer notes.')}<br>${esc(r.explain||r.hostNotes||'')}</div>`:`<div class="host-controls"><button class="gold" data-action="reveal-quiz">Reveal correct answer</button></div>`}${game.answerRevealed&&!game.roundDone?`<div class="quiz-actions"><button class="primary" data-action="quiz-award" data-team="0">Award ${roundPoints()} pts to ${esc(game.teams[0].name)}</button><button class="primary" data-action="quiz-award" data-team="1">Award ${roundPoints()} pts to ${esc(game.teams[1].name)}</button><button class="ghost" data-action="quiz-none">No score</button></div>`:''}${game.roundDone?`<div class="complete-box"><strong>✅ Answer judged!</strong><p>The score has been updated. Move on when both teams are ready.</p></div>`:''}<div class="host-tip"><b>Host tip:</b> Give both teams a short moment to agree on an option. Reveal the answer, then award the points to the team that answered correctly.</div>`;}
+function renderMystery(){const r=game.round;const clues=(r.clues||[]).map((c,i)=>`<div class="clue ${i<game.clueIndex?'':'hidden-clue'}"><span class="clue-num">${i+1}</span><span class="clue-text">${i<game.clueIndex?esc(c):'Clue hidden — reveal it to read.'}</span></div>`).join('');const pts=game.clueIndex?[3,2,1][game.clueIndex-1]*LEVEL[game.level].points*currentMultiplier():0;return `<div class="clue-box">${clues}</div><div class="points-preview">${game.clueIndex?`Solve now for ${pts} points`:'Reveal the first clue to start the mystery.'}</div><div class="mystery-actions">${!game.roundDone&&game.clueIndex<3?`<button class="gold" data-action="reveal-clue">Reveal ${game.clueIndex===0?'first':game.clueIndex===1?'second':'final'} clue →</button>`:''}${!game.roundDone&&game.clueIndex>0?`<button class="primary" data-action="mystery-solve" data-team="0">${esc(game.teams[0].name)} solved it</button><button class="primary" data-action="mystery-solve" data-team="1">${esc(game.teams[1].name)} solved it</button>`:''}${!game.roundDone&&game.clueIndex===3?`<button class="ghost" data-action="mystery-none">No one solved it</button>`:''}</div>${game.roundDone?`<div class="reveal-answer"><b>Mystery answer:</b> ${esc(r.answer||r.hostNotes||'See the host notes.')}</div><div class="complete-box"><strong>🕵️ Mystery closed!</strong><p>The round is complete.</p></div>`:''}<div class="host-tip"><b>Host tip:</b> Reveal clues one at a time. Teams can answer after any clue. Earlier correct guesses earn more points. Answer: <b>${game.roundDone?esc(r.answer||r.hostNotes||'Custom answer'): 'hidden from players'}</b></div>`;}
+function renderCategory(){const r=game.round;const t=game.categoryTurn,activeName=game.teams[t].name;const sec=game.remaining;const timerText=`0:${String(sec).padStart(2,'0')}`;let control='';if(game.roundDone)control=`<div class="complete-box"><strong>🏁 Category complete!</strong><p>Scores have been added to the leaderboard.</p></div>`;else if(!game.categoryStarted&&!game.categoryFinished&&t===game.activeTeam)control=`<div class="category-actions"><button class="primary" data-action="start-category">Start ${esc(activeName)}’s turn</button></div>`;else if(game.categoryStarted)control=`<div class="category-actions"><button class="danger" data-action="finish-category">Finish this turn</button></div>`;else if(game.categoryFinished&&game.categoryTurn===game.activeTeam)control=`<div class="category-actions"><button class="primary" data-action="next-category-team">Start ${esc(game.teams[1-t].name)}’s turn →</button></div>`;else if(game.categoryFinished)control=`<div class="category-actions"><button class="gold" data-action="score-category">Compare answers & score round</button></div>`;
+ return `<div class="category-panel"><div class="category-top"><div><div class="category-turn">${game.categoryFinished?`TURN COMPLETE`:game.categoryStarted?`${esc(activeName)} IS PLAYING`:`${esc(activeName)} PLAYS FIRST`}</div><div class="category-clock" id="categoryClock">${timerText}</div></div><div style="text-align:right;font-size:9px;color:var(--muted);line-height:1.5">Each team gets<br>${game.timeLimit} seconds</div></div><div class="timer-track"><div class="timer-fill" id="timerFill" style="width:${(sec/game.timeLimit)*100}%"></div></div><div class="category-counts">${game.teams.map((team,i)=>`<div class="count-card ${i===t&&!game.roundDone?'active-count':''}"><span>${esc(team.name)} · VALID ANSWERS</span><strong>${game.categoryTallies[i]}</strong><div class="count-controls"><button data-action="tally" data-delta="-1" data-team="${i}" ${!game.categoryStarted||game.categoryFinished||t!==i?'disabled':''}>−</button><button data-action="tally" data-delta="1" data-team="${i}" ${!game.categoryStarted||game.categoryFinished||t!==i?'disabled':''}>+1</button></div></div>`).join('')}</div>${control}<div style="font-size:9px;color:var(--muted);margin-top:9px">Host: tap +1 for each new, valid answer. Use − if you tap by mistake. Do not count repeats.</div></div>${game.roundDone?`<div class="reveal-answer"><b>Example answers:</b> ${esc(r.examples||r.hostNotes||'Use reasonable answers that fit the category.')}</div>`:''}<div class="host-tip"><b>Host tip:</b> Team turns are separate. Start the first team, tally valid answers, then start the second team. When both turns are done, compare the totals. Count new answers only; do not show the example list until the round is over.</div>`;}
+function renderRoundList(){return `<div class="round-list">${game.rounds.map((r,i)=>`<div class="round-item ${i===game.index?'current':''} ${i<game.index?'done':''}"><span>${i<game.index?'✓':i===game.index?'▶':`Round ${i+1}`} · ${esc(r.title)}</span><span>${i<game.index?'DONE':i===game.index?'NOW':''}</span></div>`).join('')}</div>`;}
+function renderGame(){if(!game)return;const r=game.round;const total=game.rounds.length;const double=currentMultiplier()===2;let body=game.mode==='survey'?renderSurvey():game.mode==='quiz'?renderQuiz():game.mode==='mystery'?renderMystery():renderCategory();
+ $('gameRoot').innerHTML=`<div class="game-toolbar"><div class="game-brand"><span class="emoji">${MODE[game.mode].icon}</span><div><h2>${MODE[game.mode].name}</h2><p>${LEVEL[game.level].name} · ${game.teams.reduce((n,t)=>n+t.members.length,0)} players · ${total} rounds</p></div></div><div class="toolbar-actions"><button class="ghost" data-action="fullscreen">⛶ Fullscreen</button><button class="ghost" data-action="setup">⚙ Setup</button><button class="danger" data-action="end">End game</button></div></div>${renderScoreboard()}<div class="progress"><div class="progress-top"><span>ROUND ${game.index+1} OF ${total}</span><span>${Math.round((game.index+1)/total*100)}% COMPLETE</span></div><div class="progress-track"><div class="progress-fill" style="width:${(game.index+1)/total*100}%"></div></div></div><div class="game-layout"><section class="stage"><div class="round-meta"><span class="tag mode">${MODE[game.mode].name}</span><span class="tag">${LEVEL[game.level].name}</span><span class="tag">${r.title}</span>${double?'<span class="tag hot">DOUBLE POINTS</span>':''}</div><h3>${esc(r.prompt)}</h3>${body}</section><aside class="side"><div class="side-card"><h4>How this mode works</h4><div class="side-rules">${esc(MODE[game.mode].rule)}<br><br><strong>Host tip:</strong> Keep the pace moving, make the final call on answers and make sure both teams get a fair turn.</div></div><div class="side-card"><h4>Round tracker</h4>${renderRoundList()}</div><div class="side-card"><h4>Points this round</h4><div class="side-rules">${game.mode==='survey'?'Reveal tiles to build the bank. Three strikes give the other team a steal chance.':game.mode==='mystery'?'Solve after clue 1, 2 or 3 to earn 3×, 2× or 1× the level points.':game.mode==='category'?'The team with more valid answers wins 2× the level points. A tie gives both teams the level points.':`A correct answer earns ${roundPoints()} points.`}${double?'<br><br><strong>Final round:</strong> points are doubled.':''}</div></div></aside></div><div class="footer-actions"><div class="left"><button class="ghost" data-action="setup">← Back to setup</button></div><div class="right">${game.roundDone?`<button class="primary" data-action="next-round">${game.index===total-1?'SEE FINAL SCORES →':'NEXT ROUND →'}</button>`:''}</div></div><p class="footer-note">Host-led classroom game · Answers are judged by the host · No player devices needed</p>`;
+}
+function showResults(){stopTimer();$('gameScreen').classList.add('hidden');$('resultsScreen').classList.remove('hidden');const order=[...game.teams].sort((a,b)=>b.score-a.score);const tie=order[0].score===order[1].score;$('resultsScreen').innerHTML=`<section class="results"><div class="result-card"><div class="trophy">${tie?'🏆':'🎉'}</div><div class="eyebrow">SHOWDOWN COMPLETE</div><h2>${tie?'It’s a tie!':`${esc(order[0].name)} wins!`}</h2><p>${game.rounds.length} rounds played · ${MODE[game.mode].name} · ${LEVEL[game.level].name}. Great teamwork, clever answers and a proper classroom showdown.</p><div class="winner-banner">${tie?'Both teams are champions!':`🏆 Champions: ${esc(order[0].name)}`}</div><div class="final-scores">${order.map((t,i)=>`<div class="final-row"><strong>${i===0?'🥇': '🥈'} ${esc(t.name)}<br><small style="font-size:9px;color:var(--muted);font-weight:500">${t.members.map(esc).join(' · ')}</small></strong><span>${t.score} pts</span></div>`).join('')}</div><div class="result-actions"><button class="primary" data-action="play-again">PLAY AGAIN</button><button class="secondary" data-action="setup">BACK TO SETUP</button><button class="ghost" data-action="print">PRINT SCORES</button></div></div></section>`;window.scrollTo({top:0,behavior:'smooth'});}
+function resetToSetup(){stopTimer();game=null;$('gameScreen').classList.add('hidden');$('resultsScreen').classList.add('hidden');$('setupScreen').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'});}
+function handleAction(btn){const a=btn.dataset.action;switch(a){
+ case 'reveal-tile':revealSurvey(parseInt(btn.dataset.index,10));break;
+ case 'strike':strike();break;
+ case 'steal-success':resolveSteal(true);break;
+ case 'steal-fail':resolveSteal(false);break;
+ case 'bank-now':awardSurvey(game.activeTeam);break;
+ case 'reveal-quiz':revealQuiz();break;
+ case 'quiz-award':awardQuiz(parseInt(btn.dataset.team,10));break;
+ case 'quiz-none':game.roundDone=true;renderGame();showToast('No points awarded this round.');break;
+ case 'reveal-clue':revealClue();break;
+ case 'mystery-solve':solveMystery(parseInt(btn.dataset.team,10));break;
+ case 'mystery-none':game.roundDone=true;renderGame();showToast('Mystery remains unsolved!');break;
+ case 'start-category':startCategoryTurn();break;
+ case 'finish-category':finishCategoryTurn();break;
+ case 'next-category-team':startNextCategoryTurn();break;
+ case 'tally':if(parseInt(btn.dataset.team,10)===game.categoryTurn)changeTally(parseInt(btn.dataset.delta,10));break;
+ case 'score-category':scoreCategory();break;
+ case 'next-round':nextRound();break;
+ case 'setup':if(confirm('Return to setup? The current game scores will be lost.'))resetToSetup();break;
+ case 'end':endGame();break;
+ case 'play-again':resetToSetup();break;
+ case 'fullscreen':if(!document.fullscreenElement&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen().catch(()=>{});else if(document.exitFullscreen)document.exitFullscreen();break;
+ case 'print':window.print();break;
+ }}
+document.addEventListener('click',e=>{
+ const mode=e.target.closest('[data-mode]');if(mode){selectMode(mode.dataset.mode);return;}
+ const level=e.target.closest('[data-level]');if(level){selectLevel(level.dataset.level);return;}
+ const action=e.target.closest('[data-action]');if(action){handleAction(action);return;}
+});
+['playerCount','playerNames','teamAName','teamBName','shufflePlayers','roundCount','turnTime','doubleFinal','soundOn','customPrompt','customNotes'].forEach(id=>$(id).addEventListener('input',updateSetup));
+$('startGame').addEventListener('click',startGame);
+updateSetup();selectMode('survey');selectLevel('main');
+})();
+</script>
+</body>
+</html>
